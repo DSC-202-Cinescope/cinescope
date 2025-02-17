@@ -1,0 +1,33 @@
+apiVersion: "acid.zalan.do/v1"
+kind: "postgresql"
+metadata:
+  name: "cinescope-postgres-cluster"
+spec:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: nautilus.io/linstor
+          operator: In
+          values:
+          - "true"
+  teamId: "cinescope"
+  volume:
+    size: 10Gi
+    storageClass: linstor-igrok
+  numberOfInstances: 1
+  users:
+    team8:  # database users
+      - superuser
+      - createdb
+  databases:
+    cinescope: team8  # database name: owner
+  postgresql:
+    version: "14"  # Postgres version
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "500Mi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
