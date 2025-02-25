@@ -17,20 +17,30 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: nautilus.io/linstor
+              - key: topology.kubernetes.io/region
                 operator: In
                 values:
-                - "true"
+                - us-west
+#    spec:
+#      affinity:
+#        nodeAffinity:
+#          requiredDuringSchedulingIgnoredDuringExecution:
+#            nodeSelectorTerms:
+#            - matchExpressions:
+#              - key: nautilus.io/linstor
+#                operator: In
+#                values:
+#                - "true"
       containers:
         - name: postgres
           image: postgres:latest
           resources:
             requests:
-              cpu: "500m"
-              memory: "500Mi"
+              cpu: "10"
+              memory: "16Gi"
             limits:
-              cpu: "1"
-              memory: "1Gi"
+              cpu: "20"
+              memory: "32Gi"
           env:
             - name: POSTGRES_USER
               value: cinescope
@@ -47,12 +57,12 @@ spec:
           image: postgres:latest
           resources:
             requests:
-              cpu: "500m"
-              memory: "500Mi"
-            limits:
-              cpu: "1"
+              cpu: "4"
               memory: "1Gi"
-          command: ["/bin/sh", "-c", "sleep infinity"]
+            limits:
+              cpu: "8"
+              memory: "4Gi"
+          command: ["/bin/sh", "-c", "apt-get update && apt-get install vim python3 python3-venv python3-pip -y && sleep infinity"]
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-data
@@ -60,7 +70,8 @@ spec:
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
-            claimName: postgres-data
+            claimName: distributed-data
+            #claimName: postgres-data
 ---
 apiVersion: v1
 kind: Service
