@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-pull
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: data-pull
+  template:
+    metadata:
+      labels:
+        app: data-pull
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/region
+                operator: In
+                values:
+                - us-west
+      containers:
+        - name: data-pull
+          image: postgres:latest
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "500Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          command: ["/bin/sh", "-c", "apt-get update && apt-get install vim python3 python3-venv python3-pip -y && sleep infinity"]
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: data-pull
+      volumes:
+        - name: data-pull
+          persistentVolumeClaim:
+            claimName: distributed-data
