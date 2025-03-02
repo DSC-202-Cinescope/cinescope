@@ -70,8 +70,7 @@ spec:
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
-            claimName: distributed-data
-            #claimName: postgres-data
+            claimName: distributed-data-pg
 ---
 apiVersion: v1
 kind: Service
