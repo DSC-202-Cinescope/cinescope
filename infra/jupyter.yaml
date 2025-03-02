@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyterlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyterlab
+  template:
+    metadata:
+      labels:
+        app: jupyterlab
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/region
+                operator: In
+                values:
+                - us-west
+      containers:
+        - name: jupyter
+          image: quay.io/jupyter/base-notebook:latest
+          tty: true
+          command: ["/bin/sh"]
+          args: ["-c", "python -m pip install jupyter_collaboration && $(JUPYTER_START)"]
+          resources:
+            requests:
+              cpu: "16"
+              memory: "32Gi"
+            limits:
+              cpu: "20"
+              memory: "40Gi"
+          env:
+            - name: JUPYTER_START
+              value: "jupyter-lab"
+            - name: JUPYTER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: jupyter-credentials
+                  key: JUPYTER_USERNAME
+            - name: JUPYTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jupyter-credentials
+                  key: JUPYTER_PASSWORD
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+          - name: jupyter-config
+            mountPath: /home/jovyan/.jupyter/jupyter_notebook_config.py
+            subPath: jupyter_notebook_config.py
+          - name: jupyter-data
+            mountPath: /home/joyvan/work
+      volumes:
+      - name: jupyter-config
+        configMap:
+          name: jupyter-config
+      - name: jupyter-data
+        persistentVolumeClaim:
+          claimName: jupyter-data
