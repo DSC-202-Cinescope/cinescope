@@ -1,9 +1,9 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: data-pull
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: data-pull
@@ -23,7 +23,7 @@ spec:
                 - us-west
       containers:
         - name: data-pull
-          image: postgres:latest
+          image: ubuntu:22.04
           resources:
             requests:
               cpu: "500m"
@@ -31,11 +31,20 @@ spec:
             limits:
               cpu: "1"
               memory: "1Gi"
-          command: ["/bin/sh", "-c", "apt-get update && apt-get install vim python3 python3-venv python3-pip -y && sleep infinity"]
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt-get update && \
+              apt-get install vim python3 python3-venv python3-pip -y && \
+              pip install requests && \
+              while true; do
+                ls -al /
+                sleep 60
+              done
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
+            - mountPath: /postgres-data
               name: data-pull
-            - mountPath: /tmp/jupyter-data
+            - mountPath: /jupyter-data
               name: jupyter-data
       volumes:
         - name: data-pull

@@ -38,18 +38,13 @@ with open(tmdb_csv, 'w', newline='', encoding='utf-8') as csvfile:
 
 # JSONB objects need to be properly formatted
 df = pd.read_csv(tmdb_csv)
-df["origin_country"] = df["origin_country"].apply(
-    lambda x: "{" + ",".join(ast.literal_eval(x)) + "}" if pd.notna(x) else x
-)
 
-# Update other JSON fields
-df["genres"] = df["genres"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
-df["belongs_to_collection"] = df["belongs_to_collection"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
-df["production_companies"] = df["production_companies"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
-df["production_countries"] = df["production_countries"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
-df["spoken_languages"] = df["spoken_languages"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
+#df["belongs_to_collection"] = df["belongs_to_collection"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
+#df["production_companies"] = df["production_companies"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
+#df["production_countries"] = df["production_countries"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
+#df["spoken_languages"] = df["spoken_languages"].apply(lambda x: json.dumps(ast.literal_eval(x)) if pd.notna(x) else x)
 
-df = df.drop_duplicates(subset="id", keep="first")
+df = df.drop_duplicates(subset="actor_id", keep="first")
 df = df.applymap(lambda x: " ".join(str(x).splitlines()) if pd.notna(x) else x)
 
 df.to_csv(tmdb_csv, index=False)

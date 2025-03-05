@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+  name: flask-ingress
+spec:
+  rules:
+  - host: cinescope.nrp-nautilus.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: flask-svc
+            port:
+              number: 8080
+  tls:
+  - hosts:
+    - cinescope.nrp-nautilus.io

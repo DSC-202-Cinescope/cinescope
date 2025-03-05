@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      k8s-app: flask-http
+  template:
+    metadata:
+      labels:
+        k8s-app: flask-http
+    spec:
+      containers:
+        - name: flask
+          image: joelpolizzi/flask-dsc202:latest
+          command: ["/bin/sh", "-c"]
+          args: 
+            - apt-get update && 
+              apt-get install procps -y && 
+              sh /jupyter-data/cinescope/watchdog.sh
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+          - name: jupyter-data
+            mountPath: /jupyter-data
+      volumes:
+      - name: jupyter-data
+        persistentVolumeClaim:
+          claimName: jupyter-data

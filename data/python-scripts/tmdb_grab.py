@@ -27,7 +27,7 @@ def get_last_id():
 def get_movies(movie_id):
     url = f"{URL}{movie_id}"
     params = {'api_key': API_KEY}
-    response = requests.get(url, params=params)  # Fixed typo
+    response = requests.get(url, params=params) 
     if response.status_code == 200:
         return response.json()
     else:
@@ -49,7 +49,6 @@ def main():
         
         start_id = (last_id + 1) if last_id else 1
 
-#        for movie_id in range(start_id, latest_movie + 1):
         for movie_id in range(start_id, latest_id + 1):
             movie_data = get_movies(movie_id)
             if movie_data:
