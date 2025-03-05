@@ -15,3 +15,4 @@ c.NotebookApp.port = 8888
 # open Jupyterlab in collaborative mode
 c.LabApp.collaborative = True
 
+c.NotebookApp.allow_root=True

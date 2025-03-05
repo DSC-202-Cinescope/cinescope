@@ -18,6 +18,8 @@ data:
     # open Jupyterlab in collaborative mode
     c.LabApp.collaborative = True
 
+    c.NotebookApp.allow_root=True
+
 kind: ConfigMap
 metadata:
   creationTimestamp: "2025-03-02T20:28:34Z"
