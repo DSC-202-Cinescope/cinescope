@@ -9,9 +9,6 @@ git clone https://github.com/DSC-202-Cinescope/cinescope.git
 2) Launch the postgres cluster
 kubectl apply -f infra/postgres-deploy.yaml
 
-3) Generate retrieve the password for the team8 user:
-kubectl get secret team8.cinescope-postgres-cluster.credentials.postgresql.acid.zalan.do -o jsonpath={.data.password} | base64 -d
-
-4) Use port forwarding to access the database through Datagrip
+3) Use port forwarding to access the database through Datagrip
 kubectl port-forward cinescope-postgres-cluster-0 5432:5432 
 
