@@ -35,7 +35,12 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: data-pull
+            - mountPath: /tmp/jupyter-data
+              name: jupyter-data
       volumes:
         - name: data-pull
           persistentVolumeClaim:
             claimName: distributed-data
+        - name: jupyter-data
+          persistentVolumeClaim:
+            claimName: jupyter-data
