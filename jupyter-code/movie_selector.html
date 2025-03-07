@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Movie Selector</title>
+</head>
+<body>
+  <h1>Select a Movie</h1>
+
+  <p>
+    <label for="categorySelect">Category: </label>
+    <select id="categorySelect" onchange="updateRegion()">
+      <option value="">--Pick Category--</option>
+    </select>
+  </p>
+
+  <p>
+    <label for="regionSelect">Region: </label>
+    <select id="regionSelect" onchange="updateMovies()">
+      <option value="">--Pick Region--</option>
+    </select>
+  </p>
+
+  <p>
+    <label for="movieSelect">Movie: </label>
+    <select id="movieSelect">
+      <option value="">--Pick Movie--</option>
+    </select>
+  </p>
+
+  <script>
+    const filmData = JSON.parse('{"Action": {"A": ["John Wick", "Die Hard", "Mad Max: Fury Road"], "B": ["War", "Dhoom", "Tiger Zinda Hai"]}, "Comedy": {"C": ["The Mask", "Superbad", "21 Jump Street"], "D": ["3 Idiots", "Hera Pheri", "Munna Bhai MBBS"]}, "Drama": {"E": ["Forrest Gump", "The Shawshank Redemption", "The Godfather"], "F": ["Swades", "Dil Se", "Lagaan"]}}');
+
+    (function populateCategory() {
+        const categorySelect = document.getElementById("categorySelect");
+        const categories = Object.keys(filmData);
+        for (let cat of categories) {
+            let opt = document.createElement("option");
+            opt.value = cat;
+            opt.textContent = cat;
+            categorySelect.appendChild(opt);
+        }
+    })();
+
+    function updateRegion() {
+        const regionSelect = document.getElementById("regionSelect");
+        const movieSelect  = document.getElementById("movieSelect");
+        regionSelect.innerHTML = '<option value="">--Pick Region--</option>';
+        movieSelect.innerHTML  = '<option value="">--Pick Movie--</option>';
+
+        const catVal = document.getElementById("categorySelect").value;
+        if (!catVal) return;
+
+        const regions = Object.keys(filmData[catVal]);
+        for (let region of regions) {
+            let opt = document.createElement("option");
+            opt.value = region;
+            opt.textContent = region;
+            regionSelect.appendChild(opt);
+        }
+    }
+
+    function updateMovies() {
+        const movieSelect = document.getElementById("movieSelect");
+        movieSelect.innerHTML = '<option value="">--Pick Movie--</option>';
+
+        const catVal = document.getElementById("categorySelect").value;
+        const regionVal = document.getElementById("regionSelect").value;
+        if (!catVal || !regionVal) return;
+
+        const movies = filmData[catVal][regionVal];
+        for (let movie of movies) {
+            let opt = document.createElement("option");
+            opt.value = movie;
+            opt.textContent = movie;
+            movieSelect.appendChild(opt);
+        }
+    }
+  </script>
+</body>
+</html>
