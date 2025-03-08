@@ -1,1 +1,4 @@
 data/csv-files/actor-movie-ids-master.csv filter=lfs diff=lfs merge=lfs -text
+data/csv-files/movies-master.csv filter=lfs diff=lfs merge=lfs -text
+data/csv-files/person_ids.csv filter=lfs diff=lfs merge=lfs -text
+data/csv-files/movie_ids.csv filter=lfs diff=lfs merge=lfs -text
