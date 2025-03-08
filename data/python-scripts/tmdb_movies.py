@@ -31,7 +31,7 @@ def get_movies(movie_id):
     if response.status_code == 200:
         return response.json()
     else:
-        print(f"Failed to fetch movie ID {movie_id}. Status code: {response.status_code}")
+        print(f"Failed: {movie_id}")
         return None
 
 def write_to_json(movie_data):
@@ -41,7 +41,7 @@ def write_to_json(movie_data):
 
 def main():
     last_id = get_last_id()
-    print("Last writte movie Id: {last_id}")
+    print("Last written movie Id: {last_id}")
 
     response = requests.get(f"{URL}latest", params={'api_key': API_KEY})
     if response.status_code == 200:
@@ -49,13 +49,13 @@ def main():
         
         start_id = (last_id + 1) if last_id else 1
 
-        for movie_id in range(start_id, latest_id + 1):
+        for movie_id in range(start_id, latest_movie + 1):
             movie_data = get_movies(movie_id)
             if movie_data:
                 write_to_json(movie_data)
                 print(f"Movie stored: {movie_id}")
     else:
-        print(f"Failed to fetch latest movie. Status code: {response.status_code}")
+        print(f"Failed to fetch latest movie.")
 
 if __name__ == "__main__":
     main()
