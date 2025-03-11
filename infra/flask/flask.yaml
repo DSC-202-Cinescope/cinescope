@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: flask
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       k8s-app: flask-http
@@ -18,8 +18,11 @@ spec:
           command: ["/bin/sh", "-c"]
           args: 
             - apt-get update && 
-              apt-get install procps -y && 
-              sh /jupyter-data/cinescope/watchdog.sh
+              apt-get install procps -y &&
+              pip install psycopg2-binary pandas openai && 
+              cd /jupyter-data/cinescope/jupyter-code/ && sh watchdog.sh
+              #python app.py
+              #sh /jupyter-data/cinescope/watchdog.sh
           resources:
             requests:
               memory: "256Mi"
