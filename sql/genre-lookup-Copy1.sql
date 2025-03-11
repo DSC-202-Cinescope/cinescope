@@ -65,7 +65,8 @@ SELECT
     m.vote_average,
     avs.vote_count AS vote_classification,
     ln(NULLIF(m.vote_count, 0)) AS vote_count,
-    cl.movie_cast
+    cl.movie_cast,
+    m.overview
 FROM movies as m
 -- Join our tables on our id's
 JOIN movie_ids mi ON m.id = mi.id
@@ -78,6 +79,7 @@ WHERE EXISTS (
     FROM JSONB_ARRAY_ELEMENTS(m.genres) AS genre
     WHERE (genre ->> 'id')::INTEGER = {GENRE_ID} -- placeholder for genre id 
 )
+AND m.original_language = '{LANGUAGE_PARAM}'
 -- Group by clause
 GROUP BY cl.movie_cast, m.id, avs.score, m.vote_average, avs.vote_count, m.vote_count, m.title
 -- Order first by our vote_counts that are high. Then enter a conditional to to use high vote counts to 
