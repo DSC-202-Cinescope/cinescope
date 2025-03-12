@@ -113,6 +113,12 @@ data:
 
     # Whether requests to Neo4j are authenticated.
     # To disable authentication, uncomment this line
+    dbms.default_listen_address=0.0.0.0
+    dbms.connector.bolt.listen_address=0.0.0.0:7687
+    dbms.connector.bolt.advertised_address=neo4j:7687
+    dbms.connector.bolt.enabled=true
+    #dbms.security.auth_enabled=false
+    
     dbms.security.auth_enabled=false
 
     # Anonymous usage data reporting
