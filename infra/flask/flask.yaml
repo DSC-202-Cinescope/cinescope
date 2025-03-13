@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: flask
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       k8s-app: flask-http
@@ -12,6 +12,15 @@ spec:
       labels:
         k8s-app: flask-http
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/region
+                operator: In
+                values:
+                - us-west
       containers:
         - name: flask
           image: joelpolizzi/flask-dsc202:latest
@@ -19,17 +28,17 @@ spec:
           args: 
             - apt-get update && 
               apt-get install procps -y &&
-              pip install psycopg2-binary pandas openai && 
+              pip install psycopg2-binary pandas openai redis && 
               cd /jupyter-data/cinescope/jupyter-code/ && sh watchdog.sh
               #python app.py
               #sh /jupyter-data/cinescope/watchdog.sh
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "250m"
+              memory: "32Gi"
+              cpu: "25"
             limits:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "64Gi"
+              cpu: "50"
           volumeMounts:
           - name: jupyter-data
             mountPath: /jupyter-data
