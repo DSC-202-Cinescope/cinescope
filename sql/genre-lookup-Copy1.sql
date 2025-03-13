@@ -68,8 +68,6 @@ SELECT
     cl.movie_cast,
     m.overview
 FROM movies as m
--- Join our tables on our id's
-JOIN movie_ids mi ON m.id = mi.id
 JOIN avg_vote_score avs ON m.id = avs.id
 JOIN cast_list cl ON m.id = cl.movie_id
 -- Where exists will be select our genre from the genre json array
