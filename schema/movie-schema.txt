@@ -24,16 +24,7 @@ CREATE TABLE movies (
     title TEXT,
     video BOOLEAN,
     vote_average NUMERIC(3, 1),
-    vote_count INTEGER
-);
-
-CREATE TABLE movie_ids (
-    id INTEGER PRIMARY KEY,
-    adult BOOLEAN,
-    original_title TEXT,
-    popularity NUMERIC(10, 5),
-    video BOOLEAN,
-    FOREIGN KEY (id) REFERENCES movies (id) ON DELETE CASCADE
+S movies (id) ON DELETE CASCADE
 );
 
 CREATE TABLE actors (
