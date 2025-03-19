@@ -72,5 +72,32 @@ kubectl apply -f infra/postgres/postgres.yaml
 # Once the deployemnt is running you can port-forward to connect with DataGrip
 kubectl port-forward svc/postgres 5432:5432
 ```
+You will see the ports connected from the remote service of the pod to your local port.
+![PG-Port](images/postgres-pf.png)
 
+Now, lets connect DataGrip
+1) As with any other new instance of DataGrip we will create a new Database and connect with the following parameters![DataGrip](images/datagrip.png)
+- Host: localhost
+- port: 5432
+- User: cinescope
+- password: cine$c0pe
+- database: postgres
 
+Datagrip will now connect to the remote database and we can proceed with adding our Schema tables and test queries.
+1) In this repo, you can find the schem under cinescope/schema/movie-schema.sql 
+You may run the sql file in datagrip by following the instructions at [JetBrains-DataGrip-Doc](https://www.jetbrains.com/help/datagrip/run-sql-files.html#run-sql-file-for-several-data-sources)
+
+Alternativly, it is easier to copy and past the movie-schema.sql content into anew query window and run the table creation
+
+Select the first table in the window and execute the query
+![table-creation](images/table-creation.png)
+You will repeat this process for all tables. 
+In total you will have 4 tables created.
+You can check the created tables with:
+```
+SELECT tablename
+FROM pg_catalog.pg_tables
+WHERE schemaname = 'public';
+```
+You will have the following output if everything has been properly created
+![table-check](images/table-check.png)
