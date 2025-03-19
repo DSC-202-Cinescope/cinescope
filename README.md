@@ -1,7 +1,7 @@
 # DSC202 Winter '25
 ## Cinescope: TMDB Relational Genre Viewer 
 ### Featuring Verticle and Horizontal Scaling, Postgres, Neo4J, and Redis on the Nautilus Kubernetes Platform
-### Cinescope can be viewed publically (until 3/30) at cinescope.nrp-nautilus.io
+### Cinescope can be viewed publically (until 3/30) at [Cinescope](cinescope.nrp-nautilus.io)
 
 Group:
 Joel Polizzi, Dongting Cai, Xuanwen Hua
