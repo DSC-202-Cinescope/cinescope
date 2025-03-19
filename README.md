@@ -12,16 +12,19 @@ TMDB (The Movie Database) provides a rich database suitible for relational query
 #### The Cinescope instructions are intended to be ran in a Linux environment. If you wish to deploy on Windows or Mac, you may do so however the project was developed in Linux and the documentation is Linux specific. If you proceed outside of a linux environment then to the best of my knowledge the only difference will be in the installation instructions of Git and Git-Lfs.
 
 ## Table of Contents
-- [Infrastructure Deployment](#infrastructure)
+- [Requirements](#requirements)
+- [Postgres Deployment and Connection](#postgres)
 - [Connecting from external services](#external_connections)
 - [Front-end Access](#live)
 - [Project Report](#project-report)
 - [Slides](#Slides)
 
 ## Requirements
-2)  Nautilus login
-3)  Git package installation
-4)  Git-lfs
+1)  Nautilus login
+2)  Git package installation
+3)  Git-lfs
+5)  Local Install of DataGrip
+6)  You need to ensure that you can access your local ports 5432, 7474, 7687, and 8888
 
 ## Nautilus Access
 Nautilus is the platform we deployed Cinescope on. Access is available to UCSD students and staff. 
@@ -36,26 +39,38 @@ mkdir ~/.kube && chmod 755 ~/.kube
 cp /mnt/c/Users/jpoli/Downloads/config ~/.kube
 chmod 755 ~/.kube/config
 ```
-![K8s-Conf](images/kube-conf.png)
+Test that you have access to the cluster
+```
+kubectl get po
+```
 
 ## Installing Git and Git-LFS
 Ubuntu Linux:
 ```
-apt-get update && apt-get install git git-lfs -y
+sudo apt-get update && sudo apt-get install git git-lfs -y
 ```
 
 Windows and Mac:
 [Git-Install](https://git-scm.com/downloads)
 
-* optionally you may download the repo without git using the download link
+* optionally you may download the repo without git using the interface download link
 
-## The code base contains all the datasets needed used in 
-1) Clone down our repository
+### The code base contains all the datasets, deployemnts, and code you will need to run Cinescope
+```
+# Clone down our repository and enter the top of the tree
 git clone https://github.com/DSC-202-Cinescope/cinescope.git
+cd cinescope
+```
+## Postgres
+```
+# Deploy the CephFS Postgres PVC (Persistent Volume Claim) - 20GB
+kubectl create -f infra/ceph-postgres-pvc.yaml
 
-2) Launch the postgres cluster
-kubectl apply -f infra/postgres-deploy.yaml
+# Deploy the Postgres Service and the Postgres Application
+kubectl apply -f infra/postgres/postgres.yaml
 
-3) Use port forwarding to access the database through Datagrip
-kubectl port-forward cinescope-postgres-cluster-0 5432:5432 
+# Once the deployemnt is running you can port-forward to connect with DataGrip
+kubectl port-forward svc/postgres 5432:5432
+```
+
 
