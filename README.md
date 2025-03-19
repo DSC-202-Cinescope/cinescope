@@ -75,8 +75,8 @@ kubectl port-forward svc/postgres 5432:5432
 You will see the ports connected from the remote service of the pod to your local port.
 ![PG-Port](images/postgres-pf.png)
 
-Now, lets connect DataGrip
-1) As with any other new instance of DataGrip we will create a new Database and connect with the following parameters![DataGrip](images/datagrip.png)
+### 1) Connect DataGrip
+As with any other new instance of DataGrip we will create a new Database and connect with the following parameters![DataGrip](images/datagrip.png)
 - Host: localhost
 - port: 5432
 - User: cinescope
@@ -84,7 +84,8 @@ Now, lets connect DataGrip
 - database: postgres
 
 Datagrip will now connect to the remote database and we can proceed with adding our Schema tables and test queries.
-1) In this repo, you can find the schem under cinescope/schema/movie-schema.sql 
+
+### 2) Upload Schema from cinescope/schema/movie-schema.sql 
 You may run the sql file in datagrip by following the instructions at https://www.jetbrains.com/help/datagrip/run-sql-files.html#run-sql-file-for-several-data-sources
 
 Alternativly, it is easier to copy and past the movie-schema.sql content into anew query window and run the table creation
@@ -103,7 +104,8 @@ WHERE schemaname = 'public';
 You will have the following output if everything has been properly created
 ![table-check](images/table-check.png)
 
-### Upload the Datasets to Postgres
+
+### 3)  Upload the Datasets to Postgres
 To upload the data to the database we will proceed with using DataGrip for simplicity
 There are 4 .csv files that we will upload to Postgres
 - data/csv-files/genre.csv
@@ -111,6 +113,11 @@ There are 4 .csv files that we will upload to Postgres
 - data/csv-files/movies-master.csv
 - data/csv-files/actor-movie-ids-master.csv
 
-*** Please note: movie-master.csv contains ~1.6 million entries and actor-movie-ids-master.csv contains nearly 6 million entries. These both will take a long time to upload to postgres. This took me over a full day to import the data.
+** Please note: movie-master.csv contains ~1.6 million entries and actor-movie-ids-master.csv contains nearly 6 million entries. These both will take a long time to upload to postgres. This took me over a full day to import the data.
+
+In datagrip you will load the datasets by Right Clicking on the database public directory, then selecting Import/Export, then Import Data From File(s)
+![dg-upload1](images/datagrip-upload1.png)
+
+The upload window will appear and you will navigate to the data directory in the cloned down git repo.
 
 
