@@ -107,9 +107,9 @@ You will have the following output if everything has been properly created
 To upload the data to the database we will proceed with using DataGrip for simplicity
 There are 4 .csv files that we will upload to Postgres
 - data/csv-files/genre.csv
-- data/person\_ids.csv
-- movies-master.csv
-- actor-movie-ids-master.csv
+- data/csv-files/person\_ids.csv
+- data/csv-files/movies-master.csv
+- data/csv-files/actor-movie-ids-master.csv
 
 *** Please note: movie-master.csv contains ~1.6 million entries and actor-movie-ids-master.csv contains nearly 6 million entries. These both will take a long time to upload to postgres. This took me over a full day to import the data.
 
