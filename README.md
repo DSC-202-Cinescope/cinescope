@@ -91,6 +91,7 @@ Alternativly, it is easier to copy and past the movie-schema.sql content into an
 
 Select the first table in the window and execute the query
 ![table-creation](images/table-creation.png)
+
 You will repeat this process for all tables. 
 In total you will have 4 tables created.
 You can check the created tables with:
@@ -101,3 +102,15 @@ WHERE schemaname = 'public';
 ```
 You will have the following output if everything has been properly created
 ![table-check](images/table-check.png)
+
+### Upload the Datasets to Postgres
+To upload the data to the database we will proceed with using DataGrip for simplicity
+There are 4 .csv files that we will upload to Postgres
+- data/csv-files/genre.csv
+- data/person\_ids.csv
+- movies-master.csv
+- actor-movie-ids-master.csv
+
+*** Please note: movie-master.csv contains ~1.6 million entries and actor-movie-ids-master.csv contains nearly 6 million entries. These both will take a long time to upload to postgres. This took me over a full day to import the data.
+
+
