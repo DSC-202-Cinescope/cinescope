@@ -41,9 +41,9 @@ CREATE TABLE actor_movies (
     FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 );
 
-CREATE TABLE genr50
+CREATE TABLE genre
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255)
+  name VARCHAR(50)
 );
 
 
