@@ -56,10 +56,15 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-data
+            - mountPath: /tmp/cinescope-data
+              name: cinescope-data
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: distributed-data-pg
+        - name: cinescope-data
+          persistentVolumeClaim:
+            claimName: cinescope-data
 ---
 apiVersion: v1
 kind: Service

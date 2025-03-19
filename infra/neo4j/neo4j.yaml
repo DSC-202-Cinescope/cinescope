@@ -29,7 +29,7 @@ spec:
             - neo4j start && sleep infinity
           resources:
             requests:
-              cpu: "10"
+              cpu: "16"
               memory: "16Gi"
             limits:
               cpu: "20"
@@ -61,12 +61,12 @@ spec:
               mountPath: /data
             - name: neo4j-conf
               mountPath: /var/lib/neo4j/conf
-            - name: jupyter-data
-              mountPath: /jupyter-data
+            - name: cinescope-data
+              mountPath: /cinescope-data
       volumes:
-        - name: jupyter-data
+        - name: cinescope-data
           persistentVolumeClaim:
-            claimName: jupyter-data
+            claimName: cinescope-data
         - name: neo4j-data
           persistentVolumeClaim:
             claimName: neo4j-data

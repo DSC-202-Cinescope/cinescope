@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-data
+  name: cinescope-data
 spec:
-  storageClassName: linstor-igrok
+  storageClassName: rook-cephfs
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
-      storage: 10Gi
+      storage: 20Gi
