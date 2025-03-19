@@ -27,8 +27,7 @@ CREATE TABLE movies (
 S movies (id) ON DELETE CASCADE
 );
 
-CREATE TABLE actors (
-    adult BOOLEAN,
+CREATE TABLE actorsINTEGER  adult BOOLEAN,
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     popularity NUMERIC(10, 5)
@@ -42,7 +41,7 @@ CREATE TABLE actor_movies (
     FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 );
 
-CREATE TABLE genre (
+CREATE TABLE genr50
   id SERIAL PRIMARY KEY,
   name VARCHAR(255)
 );
