@@ -115,9 +115,39 @@ There are 4 .csv files that we will upload to Postgres
 
 ** Please note: movie-master.csv contains ~1.6 million entries and actor-movie-ids-master.csv contains nearly 6 million entries. These both will take a long time to upload to postgres. This took me over a full day to import the data.
 
-In datagrip you will load the datasets by Right Clicking on the database public directory, then selecting Import/Export, then Import Data From File(s)
+In datagrip you will load the datasets by Right Clicking on the database public directory, then selecting 'Import/Export', then 'Import Data From File(s)'
 ![dg-upload1](images/datagrip-upload1.png)
 
-The upload window will appear and you will navigate to the data directory in the cloned down git repo.
+The upload window will appear and you will navigate to the data directory in the cloned down git repo. When you selected on of the csv files to upload select 'OK'.
+![dg-upload2](images/datagrip-upload2.png)
 
+In the import window you will begin by selecting the csv file on the left hand pane. This is the data 'from' location. Ensure to check the 'First Row is Header' check box. This tells data grip that our column headers are the first row.
+![dg-upload3](images/datagrip-upload3.png)
 
+Next, on the left hand pane nested under the 'from' csv file you will see a 'to' location indicating which table we will load the data into.
+In the table field, indicate which table you would like to upload the data into. Select 'OK' to allow the data to be uploaded to the table.
+![dg-upload4](images/datagrip-upload4.png)
+
+You will need to repeat this step for the remaining CSV files. 
+Follow this association for Table to Data uploads:
+- genre.csv -> genre table
+- persons\_ids.csv -> actors table
+- actor-movie-ids-master.csv -> actor\_movies table
+- movies-master.csv -> movies table
+
+Now lets use datagrip to test that our data is available before we proceed.
+Open a new query window and use the following queries to test that the first 3 rows of data are returned to the output console.
+```
+SELECT * FROM genre
+LIMIT 3;
+SELECT * FROM actors
+LIMIT 3;
+SELECT * FROM actor_movies
+LIMIT 3;
+SELECT * FROM movies
+LIMIT 3;
+```
+Now, as an extended test we can execute a manual run of our main SQl query.
+Please note, this is only a test with a hard coded genre and language field.
+The query can be found at [sql/genre-lookup-datagrip.sql](sql/genre-lookup-datagrip.sql)
+ 
