@@ -1,5 +1,5 @@
 # Cinescope: Relationsal Genre Viewer Featuring Verticle and Horizontal Scaling, Postgres, Neo4J, and Redis on the Nautilus Kubernetes Platform
-## Cinescope can be viewed publically (until 3/30) at cinescope.nrp-nautilus.io
+### Cinescope can be viewed publically (until 3/30) at cinescope.nrp-nautilus.io
 
 ## Follow the instructions on how to deploy cinescope on your own.
 
