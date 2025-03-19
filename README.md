@@ -142,7 +142,7 @@ SELECT * FROM genre
 LIMIT 3;
 SELECT * FROM actors
 LIMIT 3;
-SELECT * FROM actor_movies
+SELECT * FROM actor\_movies
 LIMIT 3;
 SELECT * FROM movies
 LIMIT 3;
@@ -150,4 +150,8 @@ LIMIT 3;
 Now, as an extended test we can execute a manual run of our main SQl query.
 Please note, this is only a test with a hard coded genre and language field.
 The query can be found at [sql/genre-lookup-datagrip.sql](sql/genre-lookup-datagrip.sql)
- 
+
+Copy and paste the query into a datadrip console and you will see the following output:
+![dg-query](images/datagrip-query.png)
+
+
