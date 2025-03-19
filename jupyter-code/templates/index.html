@@ -301,14 +301,17 @@
                 {
                   selector: 'edge',
                   style: {
-                    'width': 2,
-                    'line-color': '#8b8a87',
+                    'width': 8,
+                    'line-color': '#ff4500',
                     'target-arrow-color': '#ccc',
                     'target-arrow-shape': 'triangle',
                     'curve-style': 'bezier',
                     'label': 'data(label)',
-                    'font-size': 10,
-                    'text-rotation': 'autorotate'
+                    'font-size': 20,
+                    'text-wrap': 'wrap',
+                    'text-max-width': '100px',
+                    'text-rotation': 'autorotate',
+                    'background-color': '#ff0000'
                   }
                 }
               ],
@@ -378,10 +381,13 @@
             });
             // Prepare edges array
             data.edges.forEach(function(edge) {
-              elements.push({ data: { source: edge.source, target: edge.target, label: edge.label } });
+              elements.push({ 
+                  data: { 
+                      source: edge.source, 
+                      target: edge.target, 
+                      label: edge.label } });
             });
 
-            
             // Initialize Cytoscape with the graph data
             var cy = cytoscape({
               container: document.getElementById('cy2'),
@@ -424,7 +430,7 @@
                   name: 'cose',
                   padding: 20,
                   nodeOverlap: 800,
-                  numIter: 5000,         // Number of iterations to run the layout algorithm
+                  numIter: 5000,
                   animate: true,
               }
             });

@@ -264,75 +264,6 @@ def get_graph():
                     "target": movie_node_id,
                     "label": "ACTED_IN"
                 })
-
-#        # Add the queried Genre node (using the valid genre_id)
-#        graph_data["nodes"].append({
-#            "id": f"Genre_{genre_id}",
-#            "label": genre,
-#            "type": "Genre"
-#        })
-
-#        # Create HAS_GENRE edge from each top movie to the queried Genre
-#        for m in movies:
-#            movie_node_id = f"Movie_{m['id']}"
-#            graph_data["edges"].append({
-#                "source": movie_node_id,
-#                "target": f"Genre_{genre_id}",
-#                "label": "HAS_GENRE"
-#            })
-
-#        # Create ACTED_IN edges between each actor and each top movie.
-#        for a in actors:
-#            if a is None:
-#                continue
-#            actor_node_id = f"Actor_{a['id']}"
-#            for m in movies:
-#                graph_data["edges"].append({
-#                    "source": actor_node_id,
-#                    "target": f"Movie_{m['id']}",
-#                    "label": "ACTED_IN"
-#                })
-
-#        # Extend the graph: for each actor, get one additional movie (not in the top 5)
-#        extension_query = """
-#        UNWIND $actor_ids AS aid
-#        MATCH (a:Actor {id: aid})-[:ACTED_IN]->(m:Movie)
-#        WHERE NOT m.id IN $top_movie_ids
-#        WITH a, m ORDER BY m.popularity DESC LIMIT 1
-#        RETURN a.id AS actor_id, m AS ext_movie
-#        """
-#        actor_ids = [a['id'] for a in actors if a is not None]
-#        top_movie_ids = [m['id'] for m in movies]
-#        ext_result = session.run(extension_query, {
-#            "actor_ids": actor_ids,
-#            "top_movie_ids": top_movie_ids
-#        })
-#        for rec in ext_result:
-#            ext_movie = rec["ext_movie"]
-#            ext_movie_node_id = f"Movie_{ext_movie['id']}"
-#            # Add the extended movie node if not already present.
-#            if not any(n["id"] == ext_movie_node_id for n in graph_data["nodes"]):
-#                graph_data["nodes"].append({
-#                    "id": ext_movie_node_id,
-#                    "label": ext_movie.get("title", "Untitled"),
-#                    "type": "Movie"
-#                })
-#            # Create an ACTED_IN edge from the actor to this extended movie.
-#            actor_node_id = f"Actor_{rec['actor_id']}"
-#            graph_data["edges"].append({
-#                "source": actor_node_id,
-#                "target": ext_movie_node_id,
-#                "label": "ACTED_IN"
-#            })
-#            # Optionally, add a HAS_GENRE edge if the extended movie has a primary genre.
-#            primary_genre = ext_movie.get("primary_genre_id")
-#            if primary_genre:
-#                graph_data["edges"].append({
-#                    "source": ext_movie_node_id,
-#                    "target": f"Genre_{primary_genre}",
-#                    "label": "HAS_GENRE"
-#                })
-
     return jsonify(graph_data)
 
 def get_genre_movie_counts():
@@ -406,51 +337,47 @@ def get_graph2():
     if not genre_id:
         return jsonify({"error": f"Genre '{genre}' not found."}), 404
 
+    cache_key = f"graphactor_query:{genre}"
+    cached_result = redis_client.get(cache_key)
+    #if cached_result:
+    #    return jsonify(json.loads(cached_result))
+
     graph_data2 = {"nodes": [], "edges": []}
     
     with driver.session() as session:
-
         query = """
-        MATCH (a1:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(a2:Person)
-        MATCH (m)-[:HAS_GENRE]->(g:Genre)
-        WHERE a1.popularity > 1 AND a2.popularity > 1 AND a1 <> a2 AND g.name = $genre
-        WITH a1, a2, COUNT(m) AS shared_movies
+        MATCH (m:Movie)-[:HAS_GENRE]->(g:Genre {name: $genre})
+        WITH m, g
+        MATCH (a1:Person)-[:ACTED_IN]->(m)<-[:ACTED_IN]-(a2:Person)
+        WHERE a1.popularity > 0.5 
+          AND a2.popularity > 0.5 
+          AND a1 <> a2
+        WITH a1, a2, COUNT(m) AS shared_movies, COLLECT(m.title) AS movie_titles
         WHERE shared_movies > 1
-        MERGE (actor1:Actor {name: a1.name})
-        MERGE (actor2:Actor {name: a2.name})
-        MERGE (actor1)-[r:SHARED {movies: shared_movies}]->(actor2)
-        RETURN actor1, actor2, r
+        RETURN a1, a2, {movies: shared_movies} AS relationship_data, movie_titles
+        LIMIT 5000;
         """
+        result = session.run(query, {"genre": genre}, timeout=120)
 
-        result = session.run(query, {"genre": genre})
         if not result:
             return jsonify({"error": "No data found for the given genre."}), 404
         
         actors_sharing_movies_data = []
         for record in result:
-            actor1 = record['actor1']
-            actor2 = record['actor2']
-            shared_movies = record['r']['movies']
-
+            actor1 = record["a1"]["name"]
+            actor2 = record["a2"]["name"]
+            shared_movies = record["relationship_data"]["movies"]
+            movie_titles = record["movie_titles"]
+            
             # Add nodes for actors
-            graph_data2["nodes"].append({
-                "id": f"Actor_{actor1['name']}",
-                "label": actor1['name'],
-                "type": "Actor"
-            })
-            graph_data2["nodes"].append({
-                "id": f"Actor_{actor2['name']}",
-                "label": actor2['name'],
-                "type": "Actor"
-            })
+            graph_data2["nodes"].append({"id": f"Actor_{actor1}", "label": actor1, "type": "Actor"})
+            graph_data2["nodes"].append({"id": f"Actor_{actor2}", "label": actor2, "type": "Actor"})
             
             # Add the shared relationship
-            graph_data2["edges"].append({
-                "source": f"Actor_{actor1['name']}",
-                "target": f"Actor_{actor2['name']}",
-                "label": f"Shared Movies: {shared_movies}"
-            })
-
+            graph_data2["edges"].append({"source": f"Actor_{actor1}", "target": f"Actor_{actor2}", "label": f"Shared Movies: {shared_movies}\nMovies: {', '.join(movie_titles)}"})
+        if not record:
+            return jsonify({"error": "Missing data"}), 404
+        redis_client.setex(cache_key, 1000, json.dumps(graph_data2))
     return jsonify(graph_data2)
 
 def handle_exception(e):
