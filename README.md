@@ -27,13 +27,22 @@ TMDB (The Movie Database) provides a rich database suitible for relational query
 Nautilus is the platform we deployed Cinescope on. Access is available to UCSD students and staff. 
 To gain access follow this link and login with your University provider:
 https://portal.nrp-nautilus.io/
-<picture of nautilus>
-Once you gain access you will need to copy your kubernetes config file to your home directory.
-<screen shot the key copy process>
+![Nautilus](images/nautilus.png)
+Once you gain access you will need to create a .kube directory in your home directory and then copy your kubernetes config file to the .kube directory.
+
+```
+mkdir ~/.kube && chmod 755 ~/.kube
+# Copy the downloaded config file from your Download location to the .kube directory
+cp /mnt/c/Users/jpoli/Downloads/config ~/.kube
+chmod 755 ~/.kube/config
+```
+![K8s-Conf](images/kube-conf.png)
 
 ## Installing Git and Git-LFS
 Ubuntu Linux:
+```
 apt-get update && apt-get install git git-lfs -y
+```
 
 Windows and Mac:
 [Git-Install](https://git-scm.com/downloads)
