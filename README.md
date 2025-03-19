@@ -2,13 +2,14 @@
 ## Relationsal Genre Viewer Featuring Verticle and Horizontal Scaling, Postgres, Neo4J, and Redis on the Nautilus Kubernetes Platform
 ### Cinescope can be viewed publically (until 3/30) at cinescope.nrp-nautilus.io
 
-## Follow the instructions on how to deploy cinescope on your own.
+## Follow the instructions on how to deploy cinescope on your own. 
+## The Cinescope instructions are intended to be ran in a Linux environment. If you wish to deploy on Windows or Mac, you may do so however the project was developed in Linux and the documentation is Linux specific. 
 
-# The Cinescope instructions are intended to be ran in a Linux environment. If you wish to deploy on Windows or Mac, you may do so however the project was developed in Linux and the documentation is Linux specific. 
-
-# Requirements:
-# 
-
+## Requirements:
+1)  Ubuntu 22:04
+2)  Git installed
+3)  Git-lfs
+4)  Nautilus login.
 
 Our central postgres database is located on the Nautilus Kubernetes Cluster.
 
