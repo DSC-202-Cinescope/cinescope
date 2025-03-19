@@ -1,4 +1,4 @@
-# DSC202 Winter '25
+# DSC-202 Winter '25
 ## Cinescope: TMDB Relational Genre Viewer 
 ### Featuring Verticle and Horizontal Scaling, Postgres, Neo4J, and Redis on the Nautilus Kubernetes Platform
 ### Cinescope can be viewed publically (until 3/30) at [Cinescope](cinescope.nrp-nautilus.io)
@@ -18,11 +18,10 @@ TMDB (The Movie Database) provides a rich database suitible for relational query
 - [Project Report](#project-report)
 - [Slides](#Slides)
 
-## Requirements:
-1)  Ubuntu 22:04
-2)  Git package installation
-3)  Git-lfs
-4)  Nautilus login.
+## Requirements
+2)  Nautilus login
+3)  Git package installation
+4)  Git-lfs
 
 ## Nautilus Access
 Nautilus is the platform we deployed Cinescope on. Access is available to UCSD students and staff. 
@@ -33,9 +32,15 @@ Once you gain access you will need to copy your kubernetes config file to your h
 <screen shot the key copy process>
 
 ## Installing Git and Git-LFS
+Ubuntu Linux:
 apt-get update && apt-get install git git-lfs -y
 
-##To launch and connect
+Windows and Mac:
+[Git-Install](https://git-scm.com/downloads)
+
+* optionally you may download the repo without git using the download link
+
+## The code base contains all the datasets needed used in 
 1) Clone down our repository
 git clone https://github.com/DSC-202-Cinescope/cinescope.git
 
