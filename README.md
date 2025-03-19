@@ -1,10 +1,7 @@
 # DSC-202 Winter '25
-## Cinescope: TMDB Relational Genre Viewer 
+## Cinescope: TMDB Relational Genre Viewer - Created by: Joel Polizzi, Dongting Cai, Xuanwen Hua
 ### Featuring Verticle and Horizontal Scaling, Postgres, Neo4J, and Redis on the Nautilus Kubernetes Platform
-### Cinescope can be viewed publically (until 3/30) at [Cinescope](cinescope.nrp-nautilus.io)
-
-Group:
-Joel Polizzi, Dongting Cai, Xuanwen Hua
+### Cinescope can be viewed publically (until 3/30) at https://cinescope.nrp-nautilus.io
 
 TMDB (The Movie Database) provides a rich database suitible for relational querying. The Cinescope project has developed a development to production pipeline to do relational searching in Postgres and Neo4J utilizing data from TMDB. Furthermore, Cinescope experiments with verticle and horizontal scalling of software services and databases and has been deployed in a highly reproducible way: leveraging cloud-native infrastructure and storing our infrastructure deployments in YAML files.
 
@@ -38,6 +35,9 @@ mkdir ~/.kube && chmod 755 ~/.kube
 # Copy the downloaded config file from your Download location to the .kube directory
 cp /mnt/c/Users/jpoli/Downloads/config ~/.kube
 chmod 755 ~/.kube/config
+
+#export your KUBECONFIG variabl
+export KUBECONFIG=~/.kube/config
 ```
 Test that you have access to the cluster
 ```
@@ -51,7 +51,7 @@ sudo apt-get update && sudo apt-get install git git-lfs -y
 ```
 
 Windows and Mac:
-[Git-Install](https://git-scm.com/downloads)
+https://git-scm.com/downloads
 
 * optionally you may download the repo without git using the interface download link
 
@@ -85,7 +85,7 @@ Now, lets connect DataGrip
 
 Datagrip will now connect to the remote database and we can proceed with adding our Schema tables and test queries.
 1) In this repo, you can find the schem under cinescope/schema/movie-schema.sql 
-You may run the sql file in datagrip by following the instructions at [JetBrains-DataGrip-Doc](https://www.jetbrains.com/help/datagrip/run-sql-files.html#run-sql-file-for-several-data-sources)
+You may run the sql file in datagrip by following the instructions at https://www.jetbrains.com/help/datagrip/run-sql-files.html#run-sql-file-for-several-data-sources
 
 Alternativly, it is easier to copy and past the movie-schema.sql content into anew query window and run the table creation
 
