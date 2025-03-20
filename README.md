@@ -12,7 +12,7 @@ TMDB (The Movie Database) provides a rich database suitible for relational query
 
 ## Table of Contents
 - [Requirements](#requirements)
-- [Data Sync Pods](#data-sync)
+- [Data Sync Pods](#data-sync-pods)
 - [Postgres Deployment and Connection](#postgres)
 - [Neo4J Deployment and Connection](#neo4j)
 - [Redis Deploment](#redis)
@@ -293,7 +293,7 @@ There are 5 other files worth noting before we move on:
 
 Now we can move to the final deployment and launch our flask pods and access the front end. 
 
-# Flask
+## Flask
 Flask is the front end, this what connects the front-end to the back-end to create a database driven application
 ```
 # Deploy the Flask Service to allow access on port 8080 in the pod
@@ -314,8 +314,9 @@ kubectl get all
 The output will look similar to this:<br>
 ![k8s](k8s.png)
 
-# Explore Cinescope
+## Explore Cinescope
 
-# Project Report
-
-# Slides
+## Project Report
+Report can be accessed here: [report/DSC\_202\_Cinescope\_Report.pdf](report/DSC_202_Cinescope_Report.pdf). Be sure to select "More pages" at the bottom of each page if you view the report in the Github interface.
+## Slides
+Slides used in the video presentation can be found here: [slides/DSC-202-Cinescope-Slides.pdf](slides/DSC-202-Cinescope-Slides.pdf)
