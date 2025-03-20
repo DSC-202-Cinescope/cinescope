@@ -128,7 +128,7 @@ def getMoviesByGenreAndLanguage(genre_id, language):
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
 
-        with open("../sql/genre-lookup-Copy1.sql", "r") as file:
+        with open("../sql/genre-lookup.sql", "r") as file:
             sql_query = file.read()
 
         sql_query = sql_query.replace("{GENRE_ID}", str(genre_id))
@@ -197,8 +197,10 @@ def get_graph():
     movies = getMoviesByGenreAndLanguage(genre_id, lang)
     movie_list = [movie[0] for movie in movies]
 
-    
     graph_data = {"nodes": [], "edges": []}
+    node_ids = set()
+    edge_ids = set()
+    
     
     with driver.session() as session:
         # Query Neo4j: find top 5 movies for the given genre (ignoring language)
@@ -207,65 +209,65 @@ def get_graph():
         MATCH (g:Genre)<-[:HAS_GENRE]-(m:Movie)
         WHERE m.title IN $movie_list
         MATCH (a:Person)-[:ACTED_IN]->(m)
-        WHERE a.popularity > 8
-        RETURN collect(DISTINCT g) AS genres, 
-               collect(DISTINCT m) AS movies, 
-               collect(DISTINCT a) AS actors
+        WHERE a.popularity > 1
+        RETURN g, m, a
         """
 
-        #result = session.run(query, {"genre": genre}, movie_list=movie_list)
         result = session.run(query, {"movie_list": movie_list})
-        record = result.single()
 
-        genres = record["genres"]
-        movies = record["movies"]
-        actors = record["actors"]
+        for record in result:
+            g = record["g"]
+            m = record["m"]
+            a = record["a"]
 
-        # Add Genre nodes
-        for g in genres:
-            graph_data["nodes"].append({
-                "id": f"Genre_{g['name']}",
-                "label": g["name"],
-                "type": "Genre"
-            })
-            
-        # Add Movie nodes
-        for m in movies:
-            graph_data["nodes"].append({
-                "id": f"Movie_{m['id']}",
-                "label": m.get("title", "Untitled"),
-                "type": "Movie"
-            })
-        # Add Actor nodes
-        for a in actors:
-            if a is None:
-                continue
-            graph_data["nodes"].append({
-                "id": f"Actor_{a['id']}",
-                "label": a.get("name", "Unknown"),
-                "type": "Actor"
-            })
+            genre_node_id = f"Genre_{g['name']}"
+            if genre_node_id not in node_ids:
+                graph_data["nodes"].append({
+                    "id": genre_node_id,
+                    "label": g["name"],
+                    "type": "Genre"
+                })
+                node_ids.add(genre_node_id)
 
-        # Create relationships
-        for m in movies:
             movie_node_id = f"Movie_{m['id']}"
-            for g in genres:
+            if movie_node_id not in node_ids:
+                graph_data["nodes"].append({
+                    "id": movie_node_id,
+                    "label": m.get("title", "Untitled"),
+                    "type": "Movie"
+                })
+                node_ids.add(movie_node_id)
+
+            if a is not None:
+                actor_node_id = f"Actor_{a['id']}"
+                if actor_node_id not in node_ids:
+                    graph_data["nodes"].append({
+                        "id": actor_node_id,
+                        "label": a.get("name", "Unknown"),
+                        "type": "Actor"
+                    })
+                    node_ids.add(actor_node_id)
+
+            edge_key = (movie_node_id, genre_node_id)
+            if edge_key not in edge_ids:
                 graph_data["edges"].append({
                     "source": movie_node_id,
-                    "target": f"Genre_{g['name']}",
+                    "target": genre_node_id,
                     "label": "HAS_GENRE"
                 })
+                edge_ids.add(edge_key)
 
-            for a in actors:
-                if a is None:
-                    continue
-                graph_data["edges"].append({
-                    "source": f"Actor_{a['id']}",
-                    "target": movie_node_id,
-                    "label": "ACTED_IN"
-                })
-    return jsonify(graph_data)
-
+            if a is not None:
+                edge_key = (actor_node_id, movie_node_id)
+                if edge_key not in edge_ids:
+                    graph_data["edges"].append({
+                        "source": actor_node_id,
+                        "target": movie_node_id,
+                        "label": "ACTED_IN"
+                    })
+                    edge_ids.add(edge_key)
+        return jsonify(graph_data)
+ 
 def get_genre_movie_counts():
     query = """
     MATCH (g:Genre)<-[:HAS_GENRE]-(m:Movie)
