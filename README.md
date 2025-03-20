@@ -90,12 +90,15 @@ You will see the ports connected from the remote service of the pod to your loca
 ![PG-Port](images/postgres-pf.png)
 
 ### 1) Connect DataGrip
-As with any other new instance of DataGrip we will create a new Database and connect with the following parameters![DataGrip](images/datagrip.png)
+As with any other new instance of DataGrip we will create a new Database and connect with the following parameters
 - Host: localhost
 - port: 5432
 - User: cinescope
 - password: cine$c0pe
 - database: postgres
+
+<br>
+![DataGrip](images/datagrip.png)
 
 Datagrip will now connect to the remote database and we can proceed with adding our Schema tables and test queries.
 
@@ -105,18 +108,18 @@ You may run the sql file in datagrip by following the instructions at https://ww
 Alternativly, it is easier to copy and past the movie-schema.sql content into anew query window and run the table creation
 
 Select the first table in the window and execute the query
-![table-creation](images/table-creation.png)
+<br>![table-creation](images/table-creation.png)<br>
 
 You will repeat this process for all tables. 
 In total you will have 4 tables created.
 You can check the created tables with:
 ```
 SELECT tablename
-FROM pg_catalog.pg_tables
+FROM pg\_catalog.pg\_tables
 WHERE schemaname = 'public';
 ```
 You will have the following output if everything has been properly created
-![table-check](images/table-check.png)
+<br>![table-check](images/table-check.png)<br>
 
 
 ### 3)  Upload the Datasets to Postgres
@@ -129,18 +132,18 @@ There are 4 .csv files that we will upload to Postgres
 
 ** Please note: movie-master.csv contains ~1.6 million entries and actor-movie-ids-master.csv contains nearly 6 million entries. These both will take a long time to upload to postgres. This took me over a full day to import the data.
 
-In datagrip you will load the datasets by Right Clicking on the database public directory, then selecting 'Import/Export', then 'Import Data From File(s)'<br />
-![dg-upload1](images/datagrip-upload1.png)<br>
+In datagrip you will load the datasets by Right Clicking on the database public directory, then selecting 'Import/Export', then 'Import Data From File(s)'
+<br>![dg-upload1](images/datagrip-upload1.png)<br>
 
 The upload window will appear and you will navigate to the data directory in the cloned down git repo. When you selected on of the csv files to upload select 'OK'.
-![dg-upload2](images/datagrip-upload2.png)<br>
+<br>![dg-upload2](images/datagrip-upload2.png)<br>
 
 In the import window you will begin by selecting the csv file on the left hand pane. This is the data 'from' location. Ensure to check the 'First Row is Header' check box. This tells data grip that our column headers are the first row.
-![dg-upload3](images/datagrip-upload3.png)<br>
+<br>![dg-upload3](images/datagrip-upload3.png)<br>
 
 Next, on the left hand pane nested under the 'from' csv file you will see a 'to' location indicating which table we will load the data into.
 In the table field, indicate which table you would like to upload the data into. Select 'OK' to allow the data to be uploaded to the table.
-![dg-upload4](images/datagrip-upload4.png)<br>
+<br>![dg-upload4](images/datagrip-upload4.png)<br>
 
 You will need to repeat this step for the remaining CSV files. 
 Follow this association for Table to Data uploads:
@@ -192,17 +195,17 @@ Now that Neo4J is running lets forward our service and connect over our browser
 kubectl port-forward svc/neo4j 7474:7474 7687:7687
 ```
 You will see the following output
-![neo4j-pf](images/neo4j-connection.png)
+<br>![neo4j-pf](images/neo4j-connection.png)<br>
 
 ### 2) Launch the Neo4J web interface
 Now that our ports are forwarded lets connect to the Neo4J instance in our browser at localhost:7474
 You will be taken to the login page for the instance.
 Ensure that bolt://localhost:7687 is set as the Connection URL
 You can set Authentication type to Username / Password, though you do not need to enter a username or password. I configuired Neo4j to be open in our environment.
-![neo4j-web](images/neo4j-web.png)
+<br>![neo4j-web](images/neo4j-web.png)<br>
 
 Upon connecting you should see the following
-![neo4j-web2](images/neo4j-web2.png)
+<br>![neo4j-web2](images/neo4j-web2.png)<br>
 
 Now that the Neo4J database is configuired lets launch Redis! 
 
@@ -245,18 +248,18 @@ Once your pods are created we will again port-forward to our local browser and h
 # Port Forward the jupyterlab pod
 kubectl port-forward $(kubectl get pods -lapp=jupyterlab --output jsonpath='{.items[0].metadata.name}') 8888:8888
 ```
-![jupyterlab-portforward](jl-pf.png)<br>
+<br>![jupyterlab-portforward](jl-pf.png)<br>
 Now, in your web browser navigate to: <br>
 localhost:8888
 
-You will now see the jupyterlab login page. Use the password specified above and you will be able to login<br>
-![jl-login](jl-login.png)<br>
+You will now see the jupyterlab login page. Use the password specified above and you will be able to login
+<br>![jl-login](jl-login.png)<br>
 
-On the left hand pane you will be placed into the /work/cinescope directory. The entire project code from Github will be present since we have previously cloned the project into the CephFS partition that is shared across the pods. <br>
-![jl-left-pane](jl-left-pane)<br> 
+On the left hand pane you will be placed into the /work/cinescope directory. The entire project code from Github will be present since we have previously cloned the project into the CephFS partition that is shared across the pods. 
+<br>![jl-left-pane](jl-left-pane)<br> 
 
 Navigate to the jupyter-code directory and open the neo4j-import.ipynb file.
-![jl-neo-import](jl-neo-import)<br>
+<br>![jl-neo-import](jl-neo-import)<br>
 
 This notebook will import the csv datasets into the Neo4J server. The cells have the following functions:
 - Establish the connection to neo4j using the bolt port we previously configuired (7687).
@@ -268,7 +271,7 @@ This notebook will import the csv datasets into the Neo4J server. The cells have
 
 Now lets proceed forward and run the example queries in the cinescope-db-connection.ipynb 
 Open the notebook and run each cell to make SQL queries against the Postgres Database and Redis Database Cache
-![cinescope-nb](cinescope-nb.png)
+<br>![cinescope-nb](cinescope-nb.png)
 
 This notebook will run the following functions
 - Install python packages
@@ -311,11 +314,38 @@ Lets take a look at all our deployed resources
 ```
 kubectl get all
 ```
-The output will look similar to this:<br>
-![k8s](k8s.png)
+The output will look similar to this:
+<br>![k8s](k8s.png)<br>
 
 ## Explore Cinescope
+Now all of our infrastructure, backend, databases, development environments, and front-end are up and running. Lets visit https://cinescope.nrp-nautilus.io and explore Cinescope.
 
+### 1) Select a Genre and a Language
+After navigating to the webpage you will see a drop down menu for genres and languages. Select a genre and a language then hit 'Submit' 
+** Please note the majority of films are in 'English--United Kingdon'.
+<br>![cs-1](images/cs-1.png)<br>
+
+If a cache hit is found for the combination then the query will be nice and fast, if a cache-miss occures then it may take several seconds for the query to update.
+You will see a table similar to the following:
+<br>![cs-top5](images/cs-top5.png)<br>
+
+### 2) Load the first Neo4J graph
+Select load graph. This will take the five movies from the previous table and allow you to explore relationships connecting movies to genres and leading cast members to movies
+<br>![cs-g1](images/cs-g1.png)<br>
+<br>![cs-g2](images/cs-g2.png)<br>
+<br>![cs-g3](images/cs-g3.png)<br>
+
+### 3) View the Top Movie Genres and the Top Actors Per Genre Neo4J tables
+The leader board of top genres and most popular actor per genre can be seen in the following tables
+<br>![cs-top-genre-neo](images/cs-top-genre-neo.png)<br>
+
+<br>![cs-top-genre-actor-neo](images/cs-top-genre-actor-neo.png)<br>
+
+### 4) Finally, lets view Actor relationships by Genre
+The final graph shows actor relationships for actors who have been in more than one role together for the genre. 
+<br>![neo-actor-graph1](images/neo-actor-graph1.png)
+<br>![neo-actor-graph2](images/neo-actor-graph2.png)
+<br>![neo-actor-graph3](images/neo-actor-graph3.png)
 ## Project Report
 Report can be accessed here: [report/DSC\_202\_Cinescope\_Report.pdf](report/DSC_202_Cinescope_Report.pdf). Be sure to select "More pages" at the bottom of each page if you view the report in the Github interface.
 ## Slides
