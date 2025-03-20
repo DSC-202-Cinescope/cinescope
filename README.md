@@ -1,7 +1,9 @@
-# DSC-202 Winter '25
-## Cinescope: TMDB Relational Genre Viewer - Created by: Joel Polizzi, Dongting Cai, Xuanwen Hua
+# DSC-202 Winter '25 - Presentation Recording and Slides available above.
+## Cinescope: TMDB Relational Genre Viewer 
+## Created by: Joel Polizzi, Dongting Cai, Xuanwen Hua
 ### Featuring Verticle and Horizontal Scaling, Postgres, Neo4J, and Redis on the Nautilus Kubernetes Platform
 ### Cinescope can be viewed publically (until 3/30) at https://cinescope.nrp-nautilus.io
+
 
 TMDB (The Movie Database) provides a rich database suitible for relational querying. The Cinescope project has developed a development to production pipeline to do relational searching in Postgres and Neo4J utilizing data from TMDB. Furthermore, Cinescope experiments with verticle and horizontal scalling of software services and databases and has been deployed in a highly reproducible way: leveraging cloud-native infrastructure and storing our infrastructure deployments in YAML files.
 
