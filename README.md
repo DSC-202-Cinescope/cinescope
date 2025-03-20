@@ -16,9 +16,9 @@ TMDB (The Movie Database) provides a rich database suitible for relational query
 - [Postgres Deployment and Connection](#postgres)
 - [Neo4J Deployment and Connection](#neo4j)
 - [Redis Deploment](#redis)
-- [Jupyter Lab Deployment and Connection](#jupyterlab)
+- [Jupyter Lab Deployment and Connection](#jupyter-lab)
 - [Flask Deployment and Connection](#flask)
-- [Explore Cinescope!](#cinescope-exploration)
+- [Explore Cinescope!](#explore-cinescope)
 - [Project Report](#project-report)
 - [Slides](#Slides)
 
@@ -130,17 +130,17 @@ There are 4 .csv files that we will upload to Postgres
 ** Please note: movie-master.csv contains ~1.6 million entries and actor-movie-ids-master.csv contains nearly 6 million entries. These both will take a long time to upload to postgres. This took me over a full day to import the data.
 
 In datagrip you will load the datasets by Right Clicking on the database public directory, then selecting 'Import/Export', then 'Import Data From File(s)'<br />
-![dg-upload1](images/datagrip-upload1.png)<br />
+![dg-upload1](images/datagrip-upload1.png)<br>
 
 The upload window will appear and you will navigate to the data directory in the cloned down git repo. When you selected on of the csv files to upload select 'OK'.
-![dg-upload2](images/datagrip-upload2.png)<br />
+![dg-upload2](images/datagrip-upload2.png)<br>
 
 In the import window you will begin by selecting the csv file on the left hand pane. This is the data 'from' location. Ensure to check the 'First Row is Header' check box. This tells data grip that our column headers are the first row.
-![dg-upload3](images/datagrip-upload3.png)<br />
+![dg-upload3](images/datagrip-upload3.png)<br>
 
 Next, on the left hand pane nested under the 'from' csv file you will see a 'to' location indicating which table we will load the data into.
 In the table field, indicate which table you would like to upload the data into. Select 'OK' to allow the data to be uploaded to the table.
-![dg-upload4](images/datagrip-upload4.png)<br />
+![dg-upload4](images/datagrip-upload4.png)<br>
 
 You will need to repeat this step for the remaining CSV files. 
 Follow this association for Table to Data uploads:
@@ -149,7 +149,7 @@ Follow this association for Table to Data uploads:
 - actor-movie-ids-master.csv -> actor\_movies table
 - movies-master.csv -> movies table
 
-### Test Datagrip SQL Queries
+### 4) Test Datagrip SQL Queries
 Now lets use datagrip to test that our data is available before we proceed.
 Open a new query window and use the following queries to test that the first 3 rows of data are returned to the output console.
 ```
@@ -245,18 +245,18 @@ Once your pods are created we will again port-forward to our local browser and h
 # Port Forward the jupyterlab pod
 kubectl port-forward $(kubectl get pods -lapp=jupyterlab --output jsonpath='{.items[0].metadata.name}') 8888:8888
 ```
-![jupyterlab-portforward](jl-pf.png)<br \>
-Now, in your web browser navigate to: <br \>
+![jupyterlab-portforward](jl-pf.png)<br>
+Now, in your web browser navigate to: <br>
 localhost:8888
 
-You will now see the jupyterlab login page. Use the password specified above and you will be able to login<br \>
-![jl-login](jl-login.png)<br \>
+You will now see the jupyterlab login page. Use the password specified above and you will be able to login<br>
+![jl-login](jl-login.png)<br>
 
-On the left hand pane you will be placed into the /work/cinescope directory. The entire project code from Github will be present since we have previously cloned the project into the CephFS partition that is shared across the pods. <br \>
-![jl-left-pane](jl-left-pane)<br \> 
+On the left hand pane you will be placed into the /work/cinescope directory. The entire project code from Github will be present since we have previously cloned the project into the CephFS partition that is shared across the pods. <br>
+![jl-left-pane](jl-left-pane)<br> 
 
 Navigate to the jupyter-code directory and open the neo4j-import.ipynb file.
-![jl-neo-import](jl-neo-import)<br \>
+![jl-neo-import](jl-neo-import)<br>
 
 This notebook will import the csv datasets into the Neo4J server. The cells have the following functions:
 - Establish the connection to neo4j using the bolt port we previously configuired (7687).
@@ -293,3 +293,29 @@ There are 5 other files worth noting before we move on:
 
 Now we can move to the final deployment and launch our flask pods and access the front end. 
 
+# Flask
+Flask is the front end, this what connects the front-end to the back-end to create a database driven application
+```
+# Deploy the Flask Service to allow access on port 8080 in the pod
+kubectl create -f infra/flask/flask-svc.yaml
+
+# Launch ingress with HAProxy. our domain name is also configuired in this file
+kubectl create -f infra/flask/flask-ingress.yaml
+
+# Launch the Flask deployment
+kubectl apply -f flask.yaml
+```
+
+Now the flask pods have been deployed.
+Lets take a look at all our deployed resources
+```
+kubectl get all
+```
+The output will look similar to this:<br>
+![k8s](k8s.png)
+
+# Explore Cinescope
+
+# Project Report
+
+# Slides

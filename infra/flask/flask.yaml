@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: flask
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       k8s-app: flask-http
@@ -29,7 +29,7 @@ spec:
             - apt-get update && 
               apt-get install procps -y &&
               pip install psycopg2-binary pandas openai redis neo4j && 
-              cd /jupyter-data/cinescope/jupyter-code/ && sh watchdog.sh
+              cd /cinescope-data/cinescope/jupyter-code/ && sh watchdog.sh
           resources:
             requests:
               memory: "4Gi"
@@ -39,7 +39,7 @@ spec:
               cpu: "4"
           volumeMounts:
           - name: cinescope-data
-            mountPath: /jupyter-data
+            mountPath: /cinescope-data
       volumes:
       - name: cinescope-data
         persistentVolumeClaim:
