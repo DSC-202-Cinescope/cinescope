@@ -8,3 +8,4 @@ data/tmdb-venv/lib filter=lfs diff=lfs merge=lfs -text
 data/tmdb-venv/pyvenv.cfg filter=lfs diff=lfs merge=lfs -text
 data/tmdb-venv/bin filter=lfs diff=lfs merge=lfs -text
 presentation-recording-cinescope.mov filter=lfs diff=lfs merge=lfs -text
+cinescope-presentation-video.mov filter=lfs diff=lfs merge=lfs -text
