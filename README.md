@@ -12,6 +12,7 @@ TMDB (The Movie Database) provides a rich database suitible for relational query
 
 ## Table of Contents
 - [Requirements](#requirements)
+- [Datasets](#datasets)
 - [Data Sync Pods](#data-sync-pods)
 - [Postgres Deployment and Connection](#postgres)
 - [Neo4J Deployment and Connection](#neo4j)
@@ -67,6 +68,9 @@ https://git-scm.com/downloads
 git clone https://github.com/DSC-202-Cinescope/cinescope.git
 cd cinescope
 ```
+## Datasets
+The datasets used in the project can be found in: [data/csv-files](data/csv-files)
+
 ## Data Sync Pods
 Before we launch our services we will launch our services we will first launch our data-sync pod which was used initially for pre-processing, though now does nothing more than ensure that the code base is available in the shared environment.
 ```
