@@ -1,4 +1,4 @@
-# DSC-202 Winter '25 - Presentation Recording and Slides available above.
+# DSC-202 Winter '25 - Presentation Recording AVAILABLE ON YOUTUBE: https://youtu.be/JaAgNudNdWs  and Slides available above.
 ## Cinescope: TMDB Relational Genre Viewer 
 ## Created by: Joel Polizzi, Dongting Cai, Xuanwen Hua
 ### Featuring Verticle and Horizontal Scaling, Postgres, Neo4J, and Redis on the Nautilus Kubernetes Platform
