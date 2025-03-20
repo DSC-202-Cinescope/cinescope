@@ -61,7 +61,7 @@ https://git-scm.com/downloads
 
 * optionally you may download the repo without git using the interface download link
 
-### The code base contains all the datasets, deployemnts, and code you will need to run Cinescope
+### The code base contains all the datasets, deployments, and code you will need to run Cinescope
 ```
 # Clone down our repository and enter the top of the tree
 git clone https://github.com/DSC-202-Cinescope/cinescope.git
@@ -129,18 +129,18 @@ There are 4 .csv files that we will upload to Postgres
 
 ** Please note: movie-master.csv contains ~1.6 million entries and actor-movie-ids-master.csv contains nearly 6 million entries. These both will take a long time to upload to postgres. This took me over a full day to import the data.
 
-In datagrip you will load the datasets by Right Clicking on the database public directory, then selecting 'Import/Export', then 'Import Data From File(s)'
-![dg-upload1](images/datagrip-upload1.png)
+In datagrip you will load the datasets by Right Clicking on the database public directory, then selecting 'Import/Export', then 'Import Data From File(s)'<br />
+![dg-upload1](images/datagrip-upload1.png)<br />
 
 The upload window will appear and you will navigate to the data directory in the cloned down git repo. When you selected on of the csv files to upload select 'OK'.
-![dg-upload2](images/datagrip-upload2.png)
+![dg-upload2](images/datagrip-upload2.png)<br />
 
 In the import window you will begin by selecting the csv file on the left hand pane. This is the data 'from' location. Ensure to check the 'First Row is Header' check box. This tells data grip that our column headers are the first row.
-![dg-upload3](images/datagrip-upload3.png)
+![dg-upload3](images/datagrip-upload3.png)<br />
 
 Next, on the left hand pane nested under the 'from' csv file you will see a 'to' location indicating which table we will load the data into.
 In the table field, indicate which table you would like to upload the data into. Select 'OK' to allow the data to be uploaded to the table.
-![dg-upload4](images/datagrip-upload4.png)
+![dg-upload4](images/datagrip-upload4.png)<br />
 
 You will need to repeat this step for the remaining CSV files. 
 Follow this association for Table to Data uploads:
@@ -194,6 +194,7 @@ kubectl port-forward svc/neo4j 7474:7474 7687:7687
 You will see the following output
 ![neo4j-pf](images/neo4j-connection.png)
 
+### 2) Launch the Neo4J web interface
 Now that our ports are forwarded lets connect to the Neo4J instance in our browser at localhost:7474
 You will be taken to the login page for the instance.
 Ensure that bolt://localhost:7687 is set as the Connection URL
@@ -203,5 +204,92 @@ You can set Authentication type to Username / Password, though you do not need t
 Upon connecting you should see the following
 ![neo4j-web2](images/neo4j-web2.png)
 
-Now we need to load our data. This process is long, it took upwards of a week to upload our data and have the connections made. 
+Now that the Neo4J database is configuired lets launch Redis! 
+
+## Redis
+The Redis database is our caching database primarily for our SQL queries. The following steps will help you deploy a StatefulSet of 6 pods, where the first is designated as our controller.
+### 1) Deploy the Redis k8s objects
+```
+# Deploy the Redis CephFS Storage Pool
+kubectl create -f infra/redis/redis-ceph.yaml
+
+# Deploy the redis configMap
+kubectl apply -f infra/redis/redis-configmap.yaml
+
+# Deploy the redis service and stateful set
+kubectl apply -f infra/redis/redis.yaml
+```
+Next, we will move onto Jupyter Lab where we have Notebooks to handle the data imports. We can head back to the Neo4J web interface or Datagrip if we want to debug queries directly in those environments, otherwise you can now stop the port-forwarding of those pods, do not worry! The service is still running and our pods will all be able to communicate with one another to access the database.
+
+## Jupyter Lab 
+The Jupyter Lab Collaborative instance allows multiple team members to work on a single code base. Though Datagrip for Postgres and the Neo4J interface were both used for debugging queries, the majority of our development took place in the Jupyter Lab Collaborative environment. Lets deploy the instance and ensure our code base is available!
+
+### 1) Launch the JupyterLab K8's objects
+```
+# Lets launch the credentials secret first
+# This sets the credentials that will be used to login to the jupyterlab instance. The username and password have been encrypted.
+# The credentials are as follows: cinescope/cine$c0pe
+
+# Launch the Secret
+kubectl create -f infra/jupyter/jupyter-credentials.yaml
+
+# Launch the JupyterLab configMap
+kubectl apply -f infra/jupyter/jupyter-config.yaml
+
+# Now lets launch JupyterLab
+kubectl apply -f infra/jupyter/jupyter.yaml
+```
+### 2) Port forward and connect
+Once your pods are created we will again port-forward to our local browser and here we will do the majority of our work. 
+```
+# Port Forward the jupyterlab pod
+kubectl port-forward $(kubectl get pods -lapp=jupyterlab --output jsonpath='{.items[0].metadata.name}') 8888:8888
+```
+![jupyterlab-portforward](jl-pf.png)<br \>
+Now, in your web browser navigate to: <br \>
+localhost:8888
+
+You will now see the jupyterlab login page. Use the password specified above and you will be able to login<br \>
+![jl-login](jl-login.png)<br \>
+
+On the left hand pane you will be placed into the /work/cinescope directory. The entire project code from Github will be present since we have previously cloned the project into the CephFS partition that is shared across the pods. <br \>
+![jl-left-pane](jl-left-pane)<br \> 
+
+Navigate to the jupyter-code directory and open the neo4j-import.ipynb file.
+![jl-neo-import](jl-neo-import)<br \>
+
+This notebook will import the csv datasets into the Neo4J server. The cells have the following functions:
+- Establish the connection to neo4j using the bolt port we previously configuired (7687).
+- Import genre nodes
+- Import the Movie nodes and Genre Relationships
+- Import Persons (actors, directors, producers)
+- Create the ACTED\_IN relationship
+- Create Indexes
+
+Now lets proceed forward and run the example queries in the cinescope-db-connection.ipynb 
+Open the notebook and run each cell to make SQL queries against the Postgres Database and Redis Database Cache
+![cinescope-nb](cinescope-nb.png)
+
+This notebook will run the following functions
+- Install python packages
+- Import python packages
+- Test the Connection to the Postgres Database
+- Run a basic query to return our SQL tables
+- Run a query to print the postgres columns from a function input
+- Test the redis connection
+- test returning our genres with redis enabled
+- test returning the genre\_id's with redis enablement
+- Retrieve the languages and cache them to redis
+- Run the top 5 movies per genre query
+- Exploratory: Print graph of normalized votes
+- Query the movie columns for specific films when a title is matched
+
+There are 5 other files worth noting before we move on:
+- cinescope/sql/genre-lookup.sql. As mentioned before, this is the main SQL query that drives our project. It is ingested by app.py updates the variables on every run of the Query with the users selections.
+- the config.py file is used to authenticate with the database. It is used in the above cells for establishing a connection.
+- The app.py file contains all of our flask front-end conversions. This file takes our final queries and allows them to be used in the front end
+- The templates/index.html. This works as the tempalate alongside the app.py file and is our HTML output for the front end
+- The watchdog.sh file is used by flask to loop and check for changes in the app.py files, file hash. This will relaunch the app.py file when a change is detected
+
+Now we can move to the final deployment and launch our flask pods and access the front end. 
 

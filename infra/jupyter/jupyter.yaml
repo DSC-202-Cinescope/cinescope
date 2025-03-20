@@ -57,12 +57,12 @@ spec:
           - name: jupyter-config
             mountPath: /home/jovyan/.jupyter/jupyter_notebook_config.py
             subPath: jupyter_notebook_config.py
-          - name: jupyter-data
+          - name: cinescope-data
             mountPath: /home/jovyan/work
       volumes:
       - name: jupyter-config
         configMap:
           name: jupyter-config
-      - name: jupyter-data
+      - name: cinescope-data
         persistentVolumeClaim:
-          claimName: jupyter-data
+          claimName: cinescope-data

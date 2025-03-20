@@ -38,9 +38,9 @@ spec:
               memory: "8Gi"
               cpu: "4"
           volumeMounts:
-          - name: jupyter-data
+          - name: cinescope-data
             mountPath: /jupyter-data
       volumes:
-      - name: jupyter-data
+      - name: cinescope-data
         persistentVolumeClaim:
-          claimName: jupyter-data
+          claimName: cinescope-data

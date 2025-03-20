@@ -24,6 +24,5 @@ kind: ConfigMap
 metadata:
   creationTimestamp: "2025-03-02T20:28:34Z"
   name: jupyter-config
-  namespace: jpolizzi-dsc202
   resourceVersion: "9749142335"
   uid: 3334c85c-049e-436d-a42f-d526b0df552c
