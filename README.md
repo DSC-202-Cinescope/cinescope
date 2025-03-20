@@ -12,9 +12,13 @@ TMDB (The Movie Database) provides a rich database suitible for relational query
 
 ## Table of Contents
 - [Requirements](#requirements)
+- [Data Sync Pods](#data-sync)
 - [Postgres Deployment and Connection](#postgres)
-- [Connecting from external services](#external_connections)
-- [Front-end Access](#live)
+- [Neo4J Deployment and Connection](#neo4j)
+- [Redis Deploment](#redis)
+- [Jupyter Lab Deployment and Connection](#jupyterlab)
+- [Flask Deployment and Connection](#flask)
+- [Explore Cinescope!](#cinescope-exploration)
 - [Project Report](#project-report)
 - [Slides](#Slides)
 
@@ -62,6 +66,14 @@ https://git-scm.com/downloads
 # Clone down our repository and enter the top of the tree
 git clone https://github.com/DSC-202-Cinescope/cinescope.git
 cd cinescope
+```
+## Data Sync Pods
+Before we launch our services we will launch our services we will first launch our data-sync pod which was used initially for pre-processing, though now does nothing more than ensure that the code base is available in the shared environment.
+```
+# Deploy the Project PVC that is shared across all pods
+kubectl create -f infra/data-sync/cinescope-pvc.yaml
+# Run the data-sync pod which will pull the repository into our cloud-native setting
+kubectl apply -f infra/data-sync/data-sync.yaml
 ```
 ## Postgres
 ```
@@ -137,6 +149,7 @@ Follow this association for Table to Data uploads:
 - actor-movie-ids-master.csv -> actor\_movies table
 - movies-master.csv -> movies table
 
+### Test Datagrip SQL Queries
 Now lets use datagrip to test that our data is available before we proceed.
 Open a new query window and use the following queries to test that the first 3 rows of data are returned to the output console.
 ```
@@ -153,7 +166,42 @@ Now, as an extended test we can execute a manual run of our main SQl query.
 Please note, this is only a test with a hard coded genre and language field.
 The query can be found at [sql/genre-lookup-datagrip.sql](sql/genre-lookup-datagrip.sql)
 
-Copy and paste the query into a datadrip console and you will see the following output:
+Copy and paste the query into a datadrip console and run the query. You will see the following output:
 ![dg-query](images/datagrip-query.png)
 
+## Neo4J 
+Neo4j Will be setup next. We will deploy a Persistent Volume Claim for storage, a ConfigMap that stores the Database configuration settings, and then we will launch the deployment, port-forward the ports, and connect over the browser to experiment with queries.
+
+### 1) Launch the Kubernetes objects
+```
+# Deploy the PVC
+kubectl create -f infra/neo4j/neo4j-pvc.yaml
+
+# Launch The Neo4J Config Map
+kubectl create -f infra/neo4j/neo4j-conf.yaml
+
+# Launch Neo4J deployment
+kubectl apply -f infra/neo4j/neo4j.yaml
+
+# Check that your neo4j deployment is running with 
+kubectl get po
+```
+Now that Neo4J is running lets forward our service and connect over our browser
+```
+# Port forward
+kubectl port-forward svc/neo4j 7474:7474 7687:7687
+```
+You will see the following output
+![neo4j-pf](images/neo4j-connection.png)
+
+Now that our ports are forwarded lets connect to the Neo4J instance in our browser at localhost:7474
+You will be taken to the login page for the instance.
+Ensure that bolt://localhost:7687 is set as the Connection URL
+You can set Authentication type to Username / Password, though you do not need to enter a username or password. I configuired Neo4j to be open in our environment.
+![neo4j-web](images/neo4j-web.png)
+
+Upon connecting you should see the following
+![neo4j-web2](images/neo4j-web2.png)
+
+Now we need to load our data. This process is long, it took upwards of a week to upload our data and have the connections made. 
 
