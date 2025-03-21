@@ -40,8 +40,10 @@ Once you gain access you will need to create a .kube directory in your home dire
 
 ```
 mkdir ~/.kube && chmod 755 ~/.kube
-# Copy the downloaded config file from your Download location to the .kube directory
-cp /mnt/c/Users/jpoli/Downloads/config ~/.kube
+# Export the path to your downloads directory
+export $DOWNLOAD_DIR=<path to your downloads directory>
+# Copy the downloaded config file from your Download location to the .kube directory.
+cp $DOWNLOAD_DIR/config ~/.kube
 chmod 755 ~/.kube/config
 
 #export your KUBECONFIG variabl
