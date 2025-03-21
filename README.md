@@ -25,8 +25,9 @@ TMDB (The Movie Database) provides a rich database suitible for relational query
 
 ## Requirements
 1)  Nautilus login
-2)  Git package installation
-3)  Git-lfs
+2)  kubectl installation
+3)  Git package installation
+4)  Git-lfs
 5)  Local Install of DataGrip
 6)  You need to ensure that you can access your local ports 5432, 7474, 7687, and 8888
 
@@ -45,6 +46,13 @@ chmod 755 ~/.kube/config
 
 #export your KUBECONFIG variabl
 export KUBECONFIG=~/.kube/config
+```
+## Now lets install kubectl
+```
+# Curl down the binary
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# Export your PATH environment variable so the kubectl tool is available. If you curl the binary elsewhere then export the path to the directory of the binary.
+export PATH=$PATH:$PWD
 ```
 Test that you have access to the cluster
 ```
