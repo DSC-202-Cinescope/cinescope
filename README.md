@@ -351,6 +351,6 @@ The final graph shows actor relationships for actors who have been in more than 
 <br>![neo-actor-graph2](images/neo-actor-graph2.png)
 <br>![neo-actor-graph3](images/neo-actor-graph3.png)
 ## Project Report
-Report can be accessed here: [report/DSC\_202\_Cinescope\_Report.pdf](report/DSC_202_Cinescope_Report.pdf). Be sure to select "More pages" at the bottom of each page if you view the report in the Github interface.
+Report can be accessed here: [report/DSC\_202\_Cinescope\_Report.pdf](report/DSC_202_Cinescope.pdf). Be sure to select "More pages" at the bottom of each page if you view the report in the Github interface.
 ## Slides
 Slides used in the video presentation can be found here: [slides/DSC-202-Cinescope-Slides.pdf](slides/DSC-202-Cinescope-Slides.pdf)
